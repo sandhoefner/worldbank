@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>World Bank DHS-CRU Vis</title>
+
+<style>
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+Put forms here
+<script>
+// create svg canvas
+var margin = {top: 50, bottom: 10, left: 300, right: 40};
+var width = 1650 - margin.left - margin.right;
+var height = 1750 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+// load data
+d3.json("52_nat_robust_JSON.json", function(data) {
+
+  // make global
+  json = data;
+
+  var color = d3.scale.linear()
+    .domain([7.3332, 29.2693])
+    .range(["blue", "red"]);
+
+  var node = svg.selectAll(".node")
+    .data(json)
+    .enter()
+    .append("g").attr("class", "node")
+    .attr("transform", function(d, i) {
+      return "translate("+(500+5*d.lon)+","+(300-5*d.lat)+")"
+    });
+
+  var groups = svg.selectAll("g")          
+    .append("text")
+    .attr("dx", 6)
+    .attr("dy", 4.5)
+    .text(function(d) {return d.cc});
+
+  node.append("circle")
+    .attr("class", "circle")
+    .attr("r", 5)
+    .attr("fill", function(d) {
+      return color(d.avg_temp)
+    });
+
+});
+
+
+
+function initVis() {
+
+}
+
+function updateVis() {
+
+}
+
+</script>
+</body>
+</html>

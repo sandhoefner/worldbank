@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>World Bank DHS-CRU Vis</title>
+
+<style>
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+Put forms here
+Acknowledgements
+
+<link href="https://raw.githubusercontent.com/sandhoefner/worldbank/master/d3-geomap-0.1.1/css/d3.geomap.css" rel="stylesheet">
+<script src="https://raw.githubusercontent.com/sandhoefner/worldbank/master/d3-geomap-0.1.1/vendor/d3.geomap.dependencies.min.js"></script>
+<script src="https://raw.githubusercontent.com/sandhoefner/worldbank/master/d3-geomap-0.1.1/js/d3.geomap.min.js"></script>
+
+<div id="map"></div>
+<script>
+
+var format = function(d) {
+    return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(32+9*d/5) + "\xB0F)";
+}
+//page
+var map = d3.geomap.choropleth()
+    .geofile('/d3-geomap-0.1.1/topojson/world/countries.json')
+    .colors(colorbrewer.YlGnBu[9])
+    .column('avg_temp')
+    .format(format)
+    .legend(true)
+    .unitId('iso');
+
+d3.select('#map')
+    .call(map.draw, map);
+
+d3.csv('52_nat_robust_CSV.csv', function(error, data) {
+  d3.select('#map')
+    .datum(data)
+    .call(map.draw, map);
+});
+
+
+
+
+
+function initVis() {
+
+}
+
+function updateVis() {
+
+}
+
+</script>
+</body>
+</html>
