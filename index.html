@@ -12,8 +12,8 @@ Put forms here
 Acknowledgements
 
 <link href="https://rawgit.com/sandhoefner/worldbank/gh-pages/d3-geomap-0.1.1/css/d3.geomap.css" rel="stylesheet">
-<script src="d3.geomap.dependencies.min.js"></script>
-<script src="d3.geomap.min.js"></script>
+<script src="https://rawgit.com/sandhoefner/worldbank/gh-pages/d3-geomap-0.1.1/vendor/d3.geomap.dependencies.min.js"></script>
+<script src="https://rawgit.com/sandhoefner/worldbank/gh-pages/d3-geomap-0.1.1/js/d3.geomap.min.js"></script>
 
 <div id="map"></div>
 <script>
@@ -23,7 +23,7 @@ var format = function(d) {
 }
 //page
 var map = d3.geomap.choropleth()
-    .geofile('/d3-geomap-0.1.1/topojson/world/countries.json')
+    .geofile('https://rawgit.com/sandhoefner/worldbank/gh-pages/d3-geomap-0.1.1/topojson/world/countries.json')
     .colors(colorbrewer.YlGnBu[9])
     .column('avg_temp')
     .format(format)
