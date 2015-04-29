@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>World Bank DHS-CRU Vis</title>
+
+<style>
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+Put forms here
+<script>
+// create svg canvas
+var margin = {top: 50, bottom: 10, left: 300, right: 40};
+var width = 1650 - margin.left - margin.right;
+var height = 1750 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+// load data
+d3.json("ghana-slim.json", function(data) {
+
+  // make global
+  json = data;
+
+  var heat_color = d3.scale.linear()
+    .domain([25.975, 28.933])
+    .range(["blue", "red"]);
+
+  var wealth_color = d3.scale.linear()
+    .domain([-233813, 387834])
+    .range(["red", "blue"]);
+
+  var mult = 30;
+
+  var heat_node = svg.selectAll(".heat_node")
+    .data(json)
+    .enter()
+    .append("g").attr("class", "heat_node")
+    .attr("transform", function(d, i) {
+      return "translate("+(300+mult*d.longnum)+","+(400-mult*d.latnum)+")"
+    });
+
+  var wealth_node = svg.selectAll(".wealth_node")
+    .data(json)
+    .enter()
+    .append("g").attr("class", "wealth_node")
+    .attr("transform", function(d, i) {
+      return "translate("+(600+mult*d.longnum)+","+(400-mult*d.latnum)+")"
+    });
+
+  // var groups = svg.selectAll("g")          
+  //   .append("text")
+  //   .attr("dx", 6)
+  //   .attr("dy", 4.5)
+  //   .text(function(d) {return d.cc});
+
+  heat_node.append("circle")
+    .attr("class", "circle")
+    .attr("r", 5)
+    .attr("fill", function(d) {
+      // console.log(this);
+      return heat_color(d.avg_month)
+    });
+
+  wealth_node.append("circle")
+    .attr("class", "circle")
+    .attr("r", 5)
+    .attr("fill", function(d) {
+      // console.log(this);
+      return wealth_color(d.wealth_nat)
+    });
+
+});
+
+function initVis() {
+
+}
+
+function updateVis() {
+
+}
+
+</script>
+</body>
+</html>
