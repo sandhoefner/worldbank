@@ -26,21 +26,25 @@ d3.json("ghana-slim.json", function(data) {
   json = data;
 
   var heat_color = d3.scale.linear()
-    .domain([25.975, 28.933])
+    .domain([25.974, 28.934])
     .range(["blue", "red"]);
 
   var wealth_color = d3.scale.linear()
-    .domain([-233813, 387834])
+    // .domain([-233813, 387834])
+    .domain([-200000,200000])
     .range(["red", "blue"]);
 
-  var mult = 30;
+  var mult = 45;
+  var y = 600;
+  var x1 = 300;
+  var x2 = 600;
 
   var heat_node = svg.selectAll(".heat_node")
     .data(json)
     .enter()
     .append("g").attr("class", "heat_node")
     .attr("transform", function(d, i) {
-      return "translate("+(300+mult*d.longnum)+","+(400-mult*d.latnum)+")"
+      return "translate("+(x1+mult*d.longnum)+","+(y-mult*d.latnum)+")"
     });
 
   var wealth_node = svg.selectAll(".wealth_node")
@@ -48,7 +52,7 @@ d3.json("ghana-slim.json", function(data) {
     .enter()
     .append("g").attr("class", "wealth_node")
     .attr("transform", function(d, i) {
-      return "translate("+(600+mult*d.longnum)+","+(400-mult*d.latnum)+")"
+      return "translate("+(x2+mult*d.longnum)+","+(y-mult*d.latnum)+")"
     });
 
   // var groups = svg.selectAll("g")          
