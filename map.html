@@ -28,25 +28,44 @@ var projection = d3.geo.mercator()
 var path = d3.geo.path()
   .projection(projection);
 
-var exploder = d3.geo.exploder()
+var exploder_lt = d3.geo.exploder()
   .projection(projection)
   .size(function(d, i) { return 400; })
-  .position(function(d, i) {console.log(d);
-                    var px = Math.max(0, width - 9*60)/2
-                    return [px + (i%10)*60, 70 + Math.floor(i/10)*60];
-                  })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [50 + px + (i%10)*60, 200 + Math.floor(i/10)*60];
+  });
+
+var exploder_gh = d3.geo.exploder()
+  .projection(projection)
+  .size(function(d, i) { return 200; })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [500 + px + (i%10)*60, 270 + Math.floor(i/10)*60];
+  });
 
 d3.json("LSO.json", function(data) {
   var units = topojson.feature(data, data.objects.units)
   var lso = svg.append("path")
     .datum(units)
     .attr("d", path)
-    .style("stroke-width", ".0000000000000001px");
+    .attr("class", "path")
+    .attr("stroke", "black")
+    .attr("fill", "white");
   lso
-    .call(exploder);
+    .call(exploder_lt);
 });
 
-
+d3.json("GHA.json", function(data) {
+  var units = topojson.feature(data, data.objects.units)
+  var gha = svg.append("path")
+    .datum(units)
+    .attr("d", path)
+    .attr("stroke", "black")
+    .attr("fill", "white");
+  gha
+    .call(exploder_gh);
+});
 
 </script>
 </body>

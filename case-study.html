@@ -7,6 +7,8 @@
 
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="exploder.js"></script>
 
 Top: Ghana. Bottom: Lesotho.<br>Left: max temp (blue cold, red hot). Right: wealth (blue rich, red poor).<br>
 
@@ -94,6 +96,89 @@ d3.csv("gh_lt_slim_CSV.csv", function(data) {
       // console.log(this);
       return wealth_color(d.wealth_nat)
     });
+});
+
+var projection = d3.geo.mercator()
+  .scale(450)
+
+var path = d3.geo.path()
+  .projection(projection);
+
+var exploder_lt = d3.geo.exploder()
+  .projection(projection)
+  .size(function(d, i) { return 400; })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [50 + px + (i%10)*60, 200 + Math.floor(i/10)*60];
+  });
+
+var exploder_gh = d3.geo.exploder()
+  .projection(projection)
+  .size(function(d, i) { return 200; })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [500 + px + (i%10)*60, 270 + Math.floor(i/10)*60];
+  });
+
+var exploder_lt2 = d3.geo.exploder()
+  .projection(projection)
+  .size(function(d, i) { return 400; })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [50 + px + (i%10)*60, 500 + Math.floor(i/10)*60];
+  });
+
+var exploder_gh2 = d3.geo.exploder()
+  .projection(projection)
+  .size(function(d, i) { return 200; })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [500 + px + (i%10)*60, 570 + Math.floor(i/10)*60];
+  });
+
+d3.json("LSO.json", function(data) {
+  var units = topojson.feature(data, data.objects.units)
+  var lso = svg.append("path")
+    .datum(units)
+    .attr("d", path)
+    .attr("class", "path")
+    .attr("stroke", "black")
+    .attr("fill", "white");
+
+  lso
+    .call(exploder_lt);
+
+  var lso2 = svg.append("path")
+    .datum(units)
+    .attr("d", path)
+    .attr("class", "path")
+    .attr("stroke", "black")
+    .attr("fill", "white");
+
+  lso2
+    .call(exploder_lt2);
+});
+
+d3.json("GHA.json", function(data) {
+  var units = topojson.feature(data, data.objects.units)
+
+  var gha = svg.append("path")
+    .datum(units)
+    .attr("d", path)
+    .attr("stroke", "black")
+    .attr("fill", "white");
+
+  gha
+    .call(exploder_gh);
+
+  var gha2 = svg.append("path")
+    .datum(units)
+    .attr("d", path)
+    .attr("stroke", "black")
+    .attr("fill", "white");
+
+  gha2
+    .call(exploder_gh2);
 });
 
 </script>
