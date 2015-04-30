@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>World Bank DHS-CRU Vis</title>
+
+<style>
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="exploder.js"></script>
+
+Top: Ghana. Bottom: Lesotho.<br>Left: max temp (blue cold, red hot). Right: wealth (blue rich, red poor).<br>
+
+<script>
+// create svg canvas
+var margin = {top: 50, bottom: 10, left: 300, right: 40};
+var width = 1250 - margin.left - margin.right;
+var height = 950 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+var projection = d3.geo.mercator()
+  .scale(450)
+
+var path = d3.geo.path()
+  .projection(projection);
+
+d3.json("LSO.json", function(data) {
+  console.log(data);
+  svg.selectAll(".subunit")
+    .data(topojson.feature(data, data.objects.units).features)
+  .enter().append("path")
+    .attr("class", function(d) { return d.properties.name; })
+    .attr("d", path);
+});
+
+</script>
+</body>
+</html>
