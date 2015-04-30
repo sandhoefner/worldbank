@@ -7,35 +7,33 @@
 
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
 
 
 <script>
-function mercator(coordinates) {
-  return [
-    coordinates[0] / 360,
-    (-180 / Math.PI * Math.log(Math.tan(Math.PI / 4 + coordinates[1] * Math.PI / 360))) / 360
-  ];
-}
 
-var path = d3.geo.path(mercator);
+// http://bost.ocks.org/mike/map/
 
-var lso = svg.append("g")
-  .attr("class", "lso")
-  .attr("transform", "translate(-40, -10)");
+var margin = {top: 50, bottom: 10, left: 300, right: 40};
+var width = 1250 - margin.left - margin.right;
+var height = 550 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+var projection = d3.geo.mercator()
+  // .scale(500)
+  .translate([width / 2, height / 2]);
+
+var path = d3.geo.path()
+  .projection(projection);
 
 d3.json("LSO.json", function(data) {
-  console.log(data);
-  lso.selectAll("path")
-    .data(data)
-    .enter().append("path")
-    // .attr("id", function(d) { return d.properties.NAME; })
-    // .attr("id", "lesotho")
-    // .attr("d", path)
-    // .attr("fill", "black")
-    // .attr("stroke", "#555555")
-    // .attr("stroke-width", 1.5);
-    // .datum(topojson.feature(data, data.objects.subunits))
-    .attr("d", d3.geo.path().projection(d3.geo.mercator()));
+  var units = topojson.feature(data, data.objects.units)
+  svg.append("path")
+    .datum(units)
+    .attr("d", path);
 });
 
 </script>
