@@ -8,13 +8,7 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
-<form>
-Display:
-<label><input type="radio" name="color" id="ghana" value="ghana" checked> Ghana</label>
-<label><input type="radio" name="color" id="lesotho" value="lesotho"> Lesotho</label>
-</form>
-
-<br>Left: temperature. Blue cold, red hot. Right: wealth. Blue rich, red poor.
+Top: Ghana. Bottom: Lesotho.<br>Left: temperature (blue cold, red hot). Right: wealth (blue rich, red poor).
 
 <script>
 // create svg canvas
@@ -26,121 +20,83 @@ var svg = d3.select("body").append("svg")
   .attr("width", width)
   .attr("height", height);
 
-var mult = 70;
-var y = 850;
-var x1 = 300;
-var x2 = 700;
-var r = 4;
+var mult_gh = 70;
+var y_gh = 850;
+var x1_gh = 300;
+var x2_gh = 700;
+var r_gh = 4;
+
+var mult_lt = 110;
+var y_lt = -2550;
+var x1_lt = -2900;
+var x2_lt = -2500;
+
+var heat_color_gh = d3.scale.linear()
+  .domain([25.974, 28.934])
+  .range(["blue", "red"]);
+  // .range(["#0000FF","#8080FF","#FF8080","#FF0000"]);
+
+var wealth_color = d3.scale.linear()
+  // .domain([-233814, 387835])
+  // .domain([-198563,359734])
+  // .domain([0,1,2,3,4])
+  .domain([-200000,200000])
+  // .domain([-157002, 262743  ])
+  // .range(["#FF0000", "#FF8080", "#8080FF", "#0000FF"]);
+  .range(["red", "blue"]);
+
+var heat_color_lt = d3.scale.linear()
+  .domain([9.874, 16.476])
+  .range(["blue", "red"]);
 
 // load data
 d3.csv("gh_lt_slim_CSV.csv", function(data) {
 
-  // make global
-  json = data;
-
-  var heat_color = d3.scale.linear()
-    .domain([25.974, 28.934])
-    .range(["blue", "red"]);
-    // .range(["#0000FF","#8080FF","#FF8080","#FF0000"]);
-
-  var wealth_color = d3.scale.linear()
-    // .domain([-233814, 387835])
-    // .domain([-198563,359734])
-    // .domain([0,1,2,3,4])
-    .domain([-200000,200000])
-    // .domain([-157002, 262743  ])
-    // .range(["#FF0000", "#FF8080", "#8080FF", "#0000FF"]);
-    .range(["red", "blue"]);
-
   var heat_node = svg.selectAll(".heat_node")
-    .data(json)
+    .data(data)
     .enter()
     .append("g").attr("class", "heat_node")
     .attr("transform", function(d, i) {
-      return "translate("+(x1+mult*d.longnum)+","+(y-mult*d.latnum)+")"
+      if (d.cc == "GH") {
+        return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
+      } else {
+        return "translate("+(x1_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
+      }
     });
 
   var wealth_node = svg.selectAll(".wealth_node")
-    .data(json)
+    .data(data)
     .enter()
     .append("g").attr("class", "wealth_node")
     .attr("transform", function(d, i) {
-      return "translate("+(x2+mult*d.longnum)+","+(y-mult*d.latnum)+")"
+      if (d.cc == "GH") {
+        return "translate("+(x2_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
+      } else {
+        return "translate("+(x2_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
+      }
     });
-
-  // var groups = svg.selectAll("g")          
-  //   .append("text")
-  //   .attr("dx", 6)
-  //   .attr("dy", 4.5)
-  //   .text(function(d) {return d.cc});
 
   heat_node.append("circle")
     .attr("class", "circle")
-    .attr("r", r)
+    .attr("r", r_gh)
     .attr("fill", function(d) {
       // console.log(this);
-      return heat_color(d.avg_month)
+      if (d.cc == "GH") {
+        return heat_color_gh(d.avg_month)
+      } else {
+        return heat_color_lt(d.avg_month)
+      }
     });
 
   wealth_node.append("circle")
     .attr("class", "circle")
-    .attr("r", r)
+    .attr("r", r_gh)
     .attr("fill", function(d) {
       // console.log(this);
       return wealth_color(d.wealth_nat)
     });
 
 });
-
-function updateVis() {
-  if (document.getElementById('ghana').checked) {
-    mult = 70;
-    y = 850;
-    x1 = 300;
-    x2 = 700;
-    r = 4;
-    var heat_node = svg.selectAll(".heat_node");
-    heat_node
-      .transition().duration(1000)
-      .attr("class", "heat_node")  
-      .attr("transform", function(d, i) {
-        return "translate("+(x2+mult*d.longnum)+","+(y-mult*d.latnum)+")"
-      });
-
-    var wealth_node = svg.selectAll(".wealth_node");
-    wealth_node
-      .transition().duration(1000)
-      .attr("class", "wealth_node")  
-      .attr("transform", function(d, i) {
-        return "translate("+(x2+mult*d.longnum)+","+(y-mult*d.latnum)+")"
-      });
-  } else {
-    mult = 1;
-    y = 850;
-    x1 = 300;
-    x2 = 700;
-    r = 4;
-    var heat_node = svg.selectAll(".heat_node");
-    heat_node
-      .transition().duration(1000)
-      .attr("class", "heat_node")  
-      .attr("transform", function(d, i) {
-        return "translate("+(x2+mult*d.longnum)+","+(y-mult*d.latnum)+")"
-      });
-
-    var wealth_node = svg.selectAll(".wealth_node");
-    wealth_node
-      .transition().duration(1000)
-      .attr("class", "wealth_node")  
-      .attr("transform", function(d, i) {
-        return "translate("+(x2+mult*d.longnum)+","+(y-mult*d.latnum)+")"
-      });
-  }
-}
-
-d3.select("input[value=\"ghana\"]").on("click", updateVis);
-d3.select("input[value=\"lesotho\"]").on("click", updateVis);
-
 </script>
 </body>
 </html>
