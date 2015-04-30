@@ -13,6 +13,7 @@
 Top: Ghana. Bottom: Lesotho.<br>Left: max temp (blue cold, red hot). Right: wealth (blue rich, red poor).<br>
 
 <script>
+
 // create svg canvas
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
 var width = 1250 - margin.left - margin.right;
@@ -23,19 +24,47 @@ var svg = d3.select("body").append("svg")
   .attr("height", height);
 
 var projection = d3.geo.mercator()
-  .scale(450)
+  .scale(1200)
 
 var path = d3.geo.path()
   .projection(projection);
 
-d3.json("LSO.json", function(data) {
-  console.log(data);
+d3.json("GHA.json", function(data) {
   svg.selectAll(".subunit")
     .data(topojson.feature(data, data.objects.units).features)
-  .enter().append("path")
+    .enter().append("path")
     .attr("class", function(d) { return d.properties.name; })
+    .attr("class", "gha")
     .attr("d", path);
 });
+
+d3.csv("gh_lt_slim_CSV.csv", function(data) {
+  d3.selectAll(".gha")
+    .attr("fill", function(d) {
+      if (d.properties.name == "Ashanti") {
+        return "pink"
+      } else if (d.properties.name == "Brong Ahafo") {
+        return "red"
+      } else if (d.properties.name == "Central") {
+        return "orange"
+      } else if (d.properties.name == "Eastern") {
+        return "yellow"
+      } else if (d.properties.name == "Greater Accr") {
+        return "green"
+      } else if (d.properties.name == "Northern") {
+        return "blue"
+      } else if (d.properties.name == "Upper East") {
+        return "purple"
+      } else if (d.properties.name == "Upper West") {
+        return "brown"
+      } else if (d.properties.name == "Volta") {
+        return "black"
+      } else if (d.properties.name == "Western") {
+        return "gray"
+      }
+    });
+});
+
 
 </script>
 </body>
