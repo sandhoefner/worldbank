@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<title>World Bank DHS-CRU Vis</title>
+<style>
+#map {width: 960px;}
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<form>
+Color by:
+<label><input type="radio" name="color" value="avg_temp" checked> Avg Monthly Temp</label>
+<label><input type="radio" name="color" value="country_temp"> Country Temp Range</label>
+<label><input type="radio" name="color" value="hottest_temp"> Hottest Monthly Temp</label>
+<label><input type="radio" name="color" value="coeff"> dY/dT</label>
+<label><input type="radio" name="color" value="house_temp"> Household Temp Range</label>
+<label><input type="radio" name="color" value="coeff_r"> dY/dR</label>
+
+
+</form>
+Acknowledgements
+<link href="d3-geomap-0.1.1/css/d3.geomap.css" rel="stylesheet">
+<script src="d3-geomap-0.1.1/vendor/d3.geomap.dependencies.min.js"></script>
+<script src="d3-geomap-0.1.1/js/d3.geomap.min.js"></script>
+<div id="map" style="background-color: #56A9E1" style="width: 400px;"></div>
+<script>
+var format = function(d) {
+    return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(32+9*d/5) + "\xB0F)";
+}
+
+var map = d3.geomap.choropleth()
+    .geofile('d3-geomap-0.1.1/topojson/world/countries.json')
+    .colors(colorbrewer.Reds[9])
+    .column('Avg Monthly Temp')
+    .format(format)
+    .legend(true)
+    .unitId('ISO Code');
+
+d3.csv('52.csv', function(error, data) {
+    DATA = data;
+    d3.select('#map')
+        .datum(data)
+        .call(map.draw, map);
+});
+
+function avg_temp() {
+    document.getElementById("map").innerHTML = ""
+    format = function(d) {
+        return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(32+9*d/5) + "\xB0F)";
+    }
+    map
+        .colors(colorbrewer.Reds[9])
+        .column('Avg Monthly Temp')
+        .format(format);
+    d3.select('#map')
+        .datum(DATA)
+        .call(map.draw, map);
+}
+
+function country_temp() {
+    document.getElementById("map").innerHTML = ""
+    format = function(d) {
+        return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(1.8*d) + "\xB0F)";
+    }
+    map
+        .colors(colorbrewer.Reds[9])
+        .column('Country Temp Range')
+        .format(format);
+    d3.select('#map')
+        .datum(DATA)
+        .call(map.draw, map);
+}
+
+function hottest_temp() {
+    document.getElementById("map").innerHTML = ""
+    format = function(d) {
+        return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(32+9*d/5) + "\xB0F)";
+    }
+    map
+        .colors(colorbrewer.Reds[9])
+        .column('Hottest Monthly Temp')
+        .format(format);
+    d3.select('#map')
+        .datum(DATA)
+        .call(map.draw, map);
+}
+
+function coeff() {
+    document.getElementById("map").innerHTML = ""
+    format = function(d) {
+        return d3.format(',')(Math.round(d));
+    }
+    map
+        .colors(colorbrewer.Reds[3])
+        .column('dY/dT')
+        .format(format);
+    d3.select('#map')
+        .datum(DATA)
+        .call(map.draw, map);
+}
+
+function house_temp() {
+    document.getElementById("map").innerHTML = ""
+    format = function(d) {
+        return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(1.8*d) + "\xB0F)";
+    }
+    map
+        .colors(colorbrewer.Reds[9])
+        .column('Household Temp Range')
+        .format(format);
+    d3.select('#map')
+        .datum(DATA)
+        .call(map.draw, map);
+}
+
+function coeff_r() {
+    document.getElementById("map").innerHTML = ""
+    format = function(d) {
+        return d3.format(',')(d);
+    }
+    map
+        .colors(colorbrewer.RdYlGn[9])
+        .column('dY/dR')
+        .format(format);
+    d3.select('#map')
+        .datum(DATA)
+        .call(map.draw, map);
+}
+
+d3.select("input[value=\"avg_temp\"]").on("click", avg_temp);
+d3.select("input[value=\"country_temp\"]").on("click", country_temp);
+d3.select("input[value=\"hottest_temp\"]").on("click", hottest_temp);
+d3.select("input[value=\"coeff\"]").on("click", coeff);
+d3.select("input[value=\"house_temp\"]").on("click", house_temp);
+d3.select("input[value=\"coeff_r\"]").on("click", coeff_r);
+</script>
+</body>
+</html>
