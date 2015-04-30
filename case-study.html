@@ -96,6 +96,24 @@ d3.csv("gh_lt_slim_CSV.csv", function(data) {
       return wealth_color(d.wealth_nat)
     });
 
+var path = d3.geo.path()
+
+var lso = svg.append("g")
+  .attr("class", "lso")
+  .attr("transform", "translate(-40, -10)");
+
+d3.json("LSO.json", function(data) {
+  console.log(data);
+  lso.selectAll("path")
+    .data(data)
+    .enter().append("path")
+    // .attr("id", function(d) { return d.properties.NAME; })
+    .attr("d", path)
+    .attr("fill", "white")
+    .attr("stroke", "#555555")
+    .attr("stroke-width", 1.5)
+});
+
 });
 </script>
 </body>
