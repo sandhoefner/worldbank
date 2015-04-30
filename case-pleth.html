@@ -38,33 +38,61 @@ d3.json("GHA.json", function(data) {
     .attr("d", path);
 });
 
+var heat_color = d3.scale.linear()
+  .domain([29.01,33.19])
+  .range(["blue", "red"]);
+
+// hard-coding disaster
+// also didn't weight stata summaries
+// but CAN'T weight javascript alternative
 d3.csv("gh_lt_slim_CSV.csv", function(data) {
   d3.selectAll(".gha")
     .attr("fill", function(d) {
       if (d.properties.name == "Ashanti") {
-        return "pink"
+        return heat_color(29.32209)
       } else if (d.properties.name == "Brong Ahafo") {
-        return "red"
+        return heat_color(30.17007)
       } else if (d.properties.name == "Central") {
-        return "orange"
+        return heat_color(29.07948)
       } else if (d.properties.name == "Eastern") {
-        return "yellow"
-      } else if (d.properties.name == "Greater Accr") {
-        return "green"
+        return heat_color(29.01532)
+      } else if (d.properties.name == "Greater Accra") {
+        return heat_color(29.71843)
       } else if (d.properties.name == "Northern") {
-        return "blue"
+        return heat_color(31.49748)
       } else if (d.properties.name == "Upper East") {
-        return "purple"
+        return heat_color(33.18589)
       } else if (d.properties.name == "Upper West") {
-        return "brown"
+        return heat_color(31.55731)
       } else if (d.properties.name == "Volta") {
-        return "black"
+        return heat_color(29.51906)
       } else if (d.properties.name == "Western") {
-        return "gray"
+        return heat_color(29.15667)
       }
     });
 });
 
+/*
+"Brong Ahafo"
+"Central"
+"Eastern"
+"Greater Accr"
+"Northern"
+"Upper East"
+"Upper West"
+"Volta"
+"Western"
+
+summ hottest_month if strmatch(dhsregna,"Brong Ahafo")
+summ hottest_month if strmatch(dhsregna,"Central")
+summ hottest_month if strmatch(dhsregna,"Eastern")
+summ hottest_month if strmatch(dhsregna,"Greater Adhsregnar")
+summ hottest_month if strmatch(dhsregna,"Northern")
+summ hottest_month if strmatch(dhsregna,"Upper East")
+summ hottest_month if strmatch(dhsregna,"Upper West")
+summ hottest_month if strmatch(dhsregna,"Volta")
+summ hottest_month if strmatch(dhsregna,"Western")
+*/
 
 </script>
 </body>
