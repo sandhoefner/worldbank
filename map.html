@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>World Bank DHS-CRU Vis</title>
+
+<style>
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+<script>
+function mercator(coordinates) {
+  return [
+    coordinates[0] / 360,
+    (-180 / Math.PI * Math.log(Math.tan(Math.PI / 4 + coordinates[1] * Math.PI / 360))) / 360
+  ];
+}
+
+var path = d3.geo.path(mercator);
+
+var lso = svg.append("g")
+  .attr("class", "lso")
+  .attr("transform", "translate(-40, -10)");
+
+d3.json("LSO.json", function(data) {
+  console.log(data);
+  lso.selectAll("path")
+    .data(data)
+    .enter().append("path")
+    // .attr("id", function(d) { return d.properties.NAME; })
+    // .attr("id", "lesotho")
+    // .attr("d", path)
+    // .attr("fill", "black")
+    // .attr("stroke", "#555555")
+    // .attr("stroke-width", 1.5);
+    // .datum(topojson.feature(data, data.objects.subunits))
+    .attr("d", d3.geo.path().projection(d3.geo.mercator()));
+});
+
+</script>
+</body>
+</html>
