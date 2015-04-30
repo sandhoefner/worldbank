@@ -8,12 +8,12 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
-Top: Ghana. Bottom: Lesotho.<br>Left: avg temp (blue cold, red hot). Middle: wealth (blue rich, red poor). Right: max temp (blue cold, red hot).
+Top: Ghana. Bottom: Lesotho.<br>Left: max temp (blue cold, red hot). Right: wealth (blue rich, red poor).<br>
 
 <script>
 // create svg canvas
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
-var width = 1850 - margin.left - margin.right;
+var width = 1250 - margin.left - margin.right;
 var height = 950 - margin.top - margin.bottom;
 
 var svg = d3.select("body").append("svg")
@@ -24,19 +24,12 @@ var mult_gh = 70;
 var y_gh = 850;
 var x1_gh = 300;
 var x2_gh = 700;
-var x3_gh = 1100;
 var r_gh = 4;
 
 var mult_lt = 110;
 var y_lt = -2550;
 var x1_lt = -2900;
 var x2_lt = -2500;
-var x3_lt = -2100;
-
-var temp_color_gh = d3.scale.linear()
-  .domain([25.974, 28.934])
-  .range(["blue", "red"]);
-  // .range(["#0000FF","#8080FF","#FF8080","#FF0000"]);
 
 var wealth_color = d3.scale.linear()
   // .domain([-233814, 387835])
@@ -46,10 +39,6 @@ var wealth_color = d3.scale.linear()
   // .domain([-157002, 262743  ])
   // .range(["#FF0000", "#FF8080", "#8080FF", "#0000FF"]);
   .range(["red", "blue"]);
-
-var temp_color_lt = d3.scale.linear()
-  .domain([9.874, 16.476])
-  .range(["blue", "red"]);
 
 var heat_color_lt = d3.scale.linear()
   .domain([15.1, 23.2])
@@ -62,27 +51,15 @@ var heat_color_gh = d3.scale.linear()
 // load data
 d3.csv("gh_lt_slim_CSV.csv", function(data) {
 
-  var temp_node = svg.selectAll(".temp_node")
-    .data(data)
-    .enter()
-    .append("g").attr("class", "temp_node")
-    .attr("transform", function(d, i) {
-      if (d.cc == "GH") {
-        return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
-      } else {
-        return "translate("+(x1_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
-      }
-    });
-
   var heat_node = svg.selectAll(".heat_node")
     .data(data)
     .enter()
     .append("g").attr("class", "heat_node")
     .attr("transform", function(d, i) {
       if (d.cc == "GH") {
-        return "translate("+(x3_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
+        return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
       } else {
-        return "translate("+(x3_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
+        return "translate("+(x1_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
       }
     });
 
@@ -95,18 +72,6 @@ d3.csv("gh_lt_slim_CSV.csv", function(data) {
         return "translate("+(x2_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
       } else {
         return "translate("+(x2_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
-      }
-    });
-
-  temp_node.append("circle")
-    .attr("class", "circle")
-    .attr("r", r_gh)
-    .attr("fill", function(d) {
-      // console.log(this);
-      if (d.cc == "GH") {
-        return temp_color_gh(d.avg_month)
-      } else {
-        return temp_color_lt(d.avg_month)
       }
     });
 
