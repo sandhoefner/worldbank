@@ -75,15 +75,15 @@ d3.csv("gh_lt_slim_CSV.csv", function(data) {
     });
 });
 
-var smile_x = []
-var smile_y = []  
+var smile_x = [250,290,320,360,400,440,480,520,320,440]
+var smile_y = [400,420,440,460,460,460,430,400,200,200]  
 
 var exploder = d3.geo.exploder()
   .projection(projection)
   .size(function(d, i) { return 40; })
   .position(function(d, i) {
     var px = Math.max(0, width - 9*60)/2
-    return [50 + px + (i%10)*60, 300 + Math.floor(i/10)*60];
+    return [smile_x[i], smile_y[i]];
   });
 
 function explode() {
