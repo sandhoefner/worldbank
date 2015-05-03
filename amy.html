@@ -89,7 +89,13 @@ var exploder = d3.geo.exploder()
 function explode() {
   d3.selectAll(".gha")
     .transition().duration(1000)
-    .call(exploder)
+    .call(exploder);
+
+  // d3.selectAll(".gha")
+  //   .transition(3000)
+  //   .attr("transform", function(d) {if (d.properties.name=="Western") 
+  //     { return"rotate(-90)"} else {return "rotate(0)"}})
+
 }
 
 function reset() {
