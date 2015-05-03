@@ -12,7 +12,18 @@
 
 <form>
   <input type="button" value="click me!">
-  <input type="button" value="reset">
+  <input type="button" value="reset"><br><br>change me!
+
+  <select id="speed">
+    <option value="1000">1</option>
+        <option value="100">.1</option>
+    <option value="500">.5</option>
+
+    <option value="2000">2</option>
+    <option value="3000">3</option>
+    <option value="4000">4</option>
+    <option value="5000">5</option>
+</select>
 </form>
 
 <script>
@@ -87,8 +98,13 @@ var exploder = d3.geo.exploder()
   });
 
 function explode() {
+  var noodle = 5;
+  d3.selectAll("option").each(function(d) {
+      if(d3.select(this).property('selected')) {
+        noodle = this.value; return noodle;}});
+  
   d3.selectAll(".gha")
-    .transition().duration(1000)
+    .transition().duration(noodle)
     .call(exploder);
 
   // d3.selectAll(".gha")
@@ -99,8 +115,12 @@ function explode() {
 }
 
 function reset() {
+  var noodle = 5;
+  d3.selectAll("option").each(function(d) {
+      if(d3.select(this).property('selected')) {
+        noodle = this.value; return noodle;}});
   d3.selectAll(".gha").transition()
-              .duration(1000)
+              .duration(noodle)
               .attr("d", path)
               .attr("transform", "translate(0,0)");
             }
