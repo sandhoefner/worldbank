@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+<html>
+<head lang="en">
 <meta charset="utf-8">
 <title>World Bank DHS-CRU Vis</title>
 
 <style>
 </style>
-
+</head>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
@@ -12,6 +14,7 @@
 
 <form>
   <input type="button" value="click me!">
+  <!-- <input type="button" value="force"> -->
   <!-- <input type="button" value="reset"> -->
   <br><br>change me!
 
@@ -104,6 +107,7 @@ var heat_color = d3.scale.linear()
 // also didn't weight stata summaries
 // but CAN'T weight javascript alternative
 d3.csv("gh_lt_slim_CSV.csv", function(data) {
+  dataGlobal = data;
   d3.selectAll(".gha")
     .attr("fill", function(d) {
       if (d.properties.name == "Ashanti") {
@@ -142,6 +146,7 @@ var exploder = d3.geo.exploder()
   });
 
 function explode() {
+  force.stop();
   var noodle = 5;
   d3.selectAll("option").each(function(d) {
       if(d3.select(this).property('selected')) {
@@ -159,6 +164,7 @@ function explode() {
 }
 
 function reeset() {
+  force.stop();
   var noodle = 5;
   d3.selectAll("option").each(function(d) {
       if(d3.select(this).property('selected')) {
@@ -175,8 +181,43 @@ function choose() {
 if (state == 1) {state = 0;explode();} else {state = 1;reeset();}
   }
 
+var force = d3.layout.force()
+  .size([750,750])
+  .charge(-50)
+  //.friction()
+  //.gravity()
+  .on("tick", tick) 
+  .on("start", function(d) {})
+  .on("end", function(d) {});
+
+
+
+
+function tick(d) {
+  var k =  d.alpha;
+  
+
+var gha = svg.selectAll(".gha");
+
+    gha.transition().duration(0)
+      .attr("transform", function(d) { 
+
+        return "translate("+100+","+100+")"});
+
+
+
+      
+}
+
+function startForce() {
+  
+force.nodes(dataGlobal)
+    .start();
+}
+
 d3.select("input[value=\"click me!\"]").on("click", choose);
 d3.select("input[value=\"reset\"]").on("click", reeset);
+d3.select("input[value=\"force\"]").on("click", startForce);
 
 </script>
 </body>
