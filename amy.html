@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>World Bank DHS-CRU Vis</title>
+
+<style>
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="exploder.js"></script>
+
+<form>
+  <input type="button" value="explode">
+  <input type="button" value="reset">
+</form>
+
+<script>
+
+// create svg canvas
+var margin = {top: 50, bottom: 10, left: 300, right: 40};
+var width = 1250 - margin.left - margin.right;
+var height = 950 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+var projection = d3.geo.mercator()
+  .scale(1200)
+
+var path = d3.geo.path()
+  .projection(projection);
+
+d3.json("GHA.json", function(data) {
+  svg.selectAll(".subunit")
+    .data(topojson.feature(data, data.objects.units).features)
+    .enter().append("path")
+    .attr("class", function(d) { return d.properties.name; })
+    .attr("class", "gha")
+    .attr("d", path);
+});
+
+var heat_color = d3.scale.linear()
+  .domain([29.01,33.19])
+  .range(["blue", "red"]);
+
+// hard-coding disaster
+// also didn't weight stata summaries
+// but CAN'T weight javascript alternative
+d3.csv("gh_lt_slim_CSV.csv", function(data) {
+  d3.selectAll(".gha")
+    .attr("fill", function(d) {
+      if (d.properties.name == "Ashanti") {
+        return heat_color(29.32209)
+      } else if (d.properties.name == "Brong Ahafo") {
+        return heat_color(30.17007)
+      } else if (d.properties.name == "Central") {
+        return heat_color(29.07948)
+      } else if (d.properties.name == "Eastern") {
+        return heat_color(29.01532)
+      } else if (d.properties.name == "Greater Accra") {
+        return heat_color(29.71843)
+      } else if (d.properties.name == "Northern") {
+        return heat_color(31.49748)
+      } else if (d.properties.name == "Upper East") {
+        return heat_color(33.18589)
+      } else if (d.properties.name == "Upper West") {
+        return heat_color(31.55731)
+      } else if (d.properties.name == "Volta") {
+        return heat_color(29.51906)
+      } else if (d.properties.name == "Western") {
+        return heat_color(29.15667)
+      }
+    });
+});
+
+var smile_x = []
+var smile_y = []  
+
+var exploder = d3.geo.exploder()
+  .projection(projection)
+  .size(function(d, i) { return 40; })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [50 + px + (i%10)*60, 300 + Math.floor(i/10)*60];
+  });
+
+function explode() {
+  d3.selectAll(".gha")
+    .transition().duration(1000)
+    .call(exploder)
+}
+
+function reset() {
+  d3.selectAll(".gha").transition()
+              .duration(1000)
+              .attr("d", path)
+              .attr("transform", "translate(0,0)");
+            }
+
+
+d3.select("input[value=\"explode\"]").on("click", explode);
+d3.select("input[value=\"reset\"]").on("click", reset);
+
+</script>
+</body>
+</html>
