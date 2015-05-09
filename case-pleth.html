@@ -17,9 +17,13 @@ Top: Ghana. Bottom: Lesotho.<br>Left: max temp (blue cold, red hot). Right: weal
 // create svg canvas
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
 var width = 1250 - margin.left - margin.right;
-var height = 950 - margin.top - margin.bottom;
+var height = 250 - margin.top - margin.bottom;
 
 var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+var svg2 = d3.select("body").append("svg")
   .attr("width", width)
   .attr("height", height);
 
@@ -36,38 +40,100 @@ d3.json("GHA.json", function(data) {
     .attr("class", function(d) { return d.properties.name; })
     .attr("class", "gha")
     .attr("d", path);
+  svg2.selectAll(".subunit")
+    .data(topojson.feature(data, data.objects.units).features)
+    .enter().append("path")
+    .attr("class", function(d) { return d.properties.name; })
+    .attr("class", "gha2")
+    .attr("d", path);
 });
 
 var heat_color = d3.scale.linear()
-  .domain([29.01,33.19])
+  .domain([29.015317013632558,33.185889007299494])
   .range(["blue", "red"]);
+
+var wealth_color = d3.scale.linear()
+  .domain([-80273.92457420925, 114905.6141439206])
+  .range(["red", "blue"]);
 
 // hard-coding disaster
 // also didn't weight stata summaries
 // but CAN'T weight javascript alternative
+function aver(d) {
+  total = 0;
+  count = 0;
+  DATA.forEach(function(e, i) {
+    if (e.dhsregna == d.properties.name) {
+      total += Number(e.hottest_month);
+      count += 1;
+    }
+  });
+  avg = total/count;
+  console.log(avg);
+  return heat_color(avg);
+}
+
+function aver2(d) {
+  total = 0;
+  count = 0;
+  DATA.forEach(function(e, i) {
+    if (e.dhsregna == d.properties.name) {
+      total += Number(e.wealth_nat);
+      count += 1;
+    }
+  });
+  avg = total/count;
+  return wealth_color(avg);
+}
+
 d3.csv("gh_lt_slim_CSV.csv", function(data) {
+  DATA = data;
   d3.selectAll(".gha")
     .attr("fill", function(d) {
       if (d.properties.name == "Ashanti") {
-        return heat_color(29.32209)
+        return aver(d);
       } else if (d.properties.name == "Brong Ahafo") {
-        return heat_color(30.17007)
+        return aver(d);
       } else if (d.properties.name == "Central") {
-        return heat_color(29.07948)
+        return aver(d);
       } else if (d.properties.name == "Eastern") {
-        return heat_color(29.01532)
+        return aver(d);
       } else if (d.properties.name == "Greater Accra") {
-        return heat_color(29.71843)
+        return aver(d);
       } else if (d.properties.name == "Northern") {
-        return heat_color(31.49748)
+        return aver(d);
       } else if (d.properties.name == "Upper East") {
-        return heat_color(33.18589)
+        return aver(d);
       } else if (d.properties.name == "Upper West") {
-        return heat_color(31.55731)
+        return aver(d);
       } else if (d.properties.name == "Volta") {
-        return heat_color(29.51906)
+        return aver(d);
       } else if (d.properties.name == "Western") {
-        return heat_color(29.15667)
+        return aver(d);
+      }
+    });
+  d3.selectAll(".gha2")
+    .attr("fill", function(d) {
+      if (d.properties.name == "Ashanti") {
+        return aver2(d);
+      } else if (d.properties.name == "Brong Ahafo") {
+        return aver2(d);
+      } else if (d.properties.name == "Central") {
+        return aver2(d);
+      } else if (d.properties.name == "Eastern") {
+        return aver2(d);
+      } else if (d.properties.name == "Greater Accra") {
+        return aver2(d);
+      } else if (d.properties.name == "Northern") {
+        return aver2(d);
+      } else if (d.properties.name == "Upper East") {
+        return aver2(d);
+      } else if (d.properties.name == "Upper West") {
+        return aver2(d);
+      } else if (d.properties.name == "Volta") {
+        return aver2(d);
+      } else if (d.properties.name == "Western") {
+        return aver2(d);
       }
     });
 });
