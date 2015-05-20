@@ -20,7 +20,7 @@ Color by:
 Acknowledgements
 <link href="d3-geomap-0.1.1/css/d3.geomap.css" rel="stylesheet">
 <script src="d3-geomap-0.1.1/vendor/d3.geomap.dependencies.min.js"></script>
-<script src="d3-geomap-0.1.1/js/d3.geomap.min.js"></script>
+<script src="d3-geomap-0.1.1/js/d3.geomap.js"></script>
 <div id="map" style="background-color: #56A9E1" style="width: 400px;"></div>
 <script>
 var format = function(d) {
@@ -29,7 +29,7 @@ var format = function(d) {
 
 var map = d3.geomap.choropleth()
     .geofile('d3-geomap-0.1.1/topojson/world/countries.json')
-    .colors(colorbrewer.Reds[9])
+    .colors(colorbrewer.Temp[8])
     .column('Avg Monthly Temp')
     .format(format)
     .legend(true)
@@ -48,7 +48,7 @@ function avg_temp() {
         return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(32+9*d/5) + "\xB0F)";
     }
     map
-        .colors(colorbrewer.Reds[9])
+        .colors(colorbrewer.Temp[8])
         .column('Avg Monthly Temp')
         .format(format);
     d3.select('#map')
@@ -62,7 +62,7 @@ function country_temp() {
         return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(1.8*d) + "\xB0F)";
     }
     map
-        .colors(colorbrewer.Reds[9])
+        .colors(colorbrewer.Temp[8])
         .column('Country Temp Range')
         .format(format);
     d3.select('#map')
@@ -76,7 +76,7 @@ function hottest_temp() {
         return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(32+9*d/5) + "\xB0F)";
     }
     map
-        .colors(colorbrewer.Reds[9])
+        .colors(colorbrewer.Temp[8])
         .column('Hottest Monthly Temp')
         .format(format);
     d3.select('#map')
@@ -104,7 +104,7 @@ function house_temp() {
         return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(1.8*d) + "\xB0F)";
     }
     map
-        .colors(colorbrewer.Reds[9])
+        .colors(colorbrewer.Temp[8])
         .column('Household Temp Range')
         .format(format);
     d3.select('#map')
@@ -125,6 +125,9 @@ function coeff_r() {
         .datum(DATA)
         .call(map.draw, map);
 }
+
+d3.selectAll("path")
+  .attr("fill", function(d) {console.log(d);console.log(this);return "gray"});
 
 d3.select("input[value=\"avg_temp\"]").on("click", avg_temp);
 d3.select("input[value=\"country_temp\"]").on("click", country_temp);
