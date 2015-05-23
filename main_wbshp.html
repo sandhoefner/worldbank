@@ -20,8 +20,8 @@ Color by:
 
 Acknowledgements
 <link href="d3-geomap-0.1.1/css/d3.geomap.css" rel="stylesheet">
-<script src="d3-geomap-0.1.1/vendor/d3.geomap.dependencies.js"></script>
-<script src="d3-geomap-0.1.1/js/d3.geomap_wbshp.js"></script>
+<script src="d3-geomap-0.1.1/vendor/d3.geomap.dependencies.min.js"></script>
+<script src="d3-geomap-0.1.1/js/d3.geomap_wbshp.min.js"></script>
 <div id="map" style="background-color: #56A9E1" style="width: 400px;"></div>
 
 <script>
@@ -36,6 +36,7 @@ var map = d3.geomap.choropleth()
     .colors(colorbrewer.Temp[8])
     .column('Avg Monthly Temp')
     .format(format)
+    .scale(50)
     .legend(true)
     .unitId('ISO_Codes');
 

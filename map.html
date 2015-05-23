@@ -58,6 +58,7 @@ d3.json("LSO.json", function(data) {
 
 d3.json("GHA.json", function(data) {
   var units = topojson.feature(data, data.objects.units)
+  console.log(units);
   var gha = svg.append("path")
     .datum(units)
     .attr("d", path)
