@@ -33,7 +33,7 @@ var map = d3.geomap.choropleth()
     .column('Avg Monthly Temp')
     .format(format)
     .legend(true)
-    .unitId('ISO Code');
+    .unitId('ISO_Codes');
 
 d3.csv('52.csv', function(error, data) {
     DATA = data;

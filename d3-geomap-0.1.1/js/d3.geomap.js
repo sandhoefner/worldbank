@@ -457,7 +457,12 @@
       geomap.properties.path = d3.geo.path().projection(proj);
       return d3.json(geomap.properties.geofile, function(error, geo) {
         geomap.geo = geo;
-        geomap.selection.units = geomap["private"].g.selectAll('path').data(topojson.feature(geo, geo.objects[geomap.properties.units]).features);
+        // console.log(geo.objects);
+        // console.log(topojson.feature(geo, geo.objects[geomap.properties.units]).features);
+        console.log(geo.objects[geomap.properties.units]);
+        console.log(geo);
+        geomap.selection.units =
+          geomap["private"].g.selectAll('path').data(topojson.feature(geo, geo.objects[geomap.properties.units]).features);
         return geomap.update();
       });
     };

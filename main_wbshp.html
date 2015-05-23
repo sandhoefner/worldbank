@@ -17,18 +17,22 @@ Color by:
 
 
 </form>
+
 Acknowledgements
 <link href="d3-geomap-0.1.1/css/d3.geomap.css" rel="stylesheet">
-<script src="d3-geomap-0.1.1/vendor/d3.geomap.dependencies.min.js"></script>
-<script src="d3-geomap-0.1.1/js/d3.geomap.js"></script>
+<script src="d3-geomap-0.1.1/vendor/d3.geomap.dependencies.js"></script>
+<script src="d3-geomap-0.1.1/js/d3.geomap_wbshp.js"></script>
 <div id="map" style="background-color: #56A9E1" style="width: 400px;"></div>
+
 <script>
+
 var format = function(d) {
     return d3.format(',.02f')(d) + "\xB0C (" + d3.format(',.02f')(32+9*d/5) + "\xB0F)";
 }
 
 var map = d3.geomap.choropleth()
-    .geofile('shape.json')
+    // must be topoJson, not geoJson
+    .geofile('shape_topo_tool.json')
     .colors(colorbrewer.Temp[8])
     .column('Avg Monthly Temp')
     .format(format)
@@ -41,7 +45,7 @@ d3.csv('52.csv', function(error, data) {
         .datum(data)
         .call(map.draw, map);
 });
-
+/*
 function avg_temp() {
     document.getElementById("map").innerHTML = ""
     format = function(d) {
@@ -135,6 +139,7 @@ d3.select("input[value=\"hottest_temp\"]").on("click", hottest_temp);
 d3.select("input[value=\"coeff\"]").on("click", coeff);
 d3.select("input[value=\"house_temp\"]").on("click", house_temp);
 d3.select("input[value=\"coeff_r\"]").on("click", coeff_r);
+*/
 </script>
 </body>
 </html>
