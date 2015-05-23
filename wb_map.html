@@ -36,6 +36,7 @@ var exploder_lt = d3.geo.exploder()
     return [50 + px + (i%10)*60, 200 + Math.floor(i/10)*60];
   });
 
+// topojson --simplify-proportion .1 --id-property ISO_Codes -p name=Names -o shape_topo_tool_point1.json shape.json
 d3.json("shape_topo_tool_point1.json", function(data) {
   var units = topojson.feature(data, data.objects.shape)
   console.log(units,"f");
