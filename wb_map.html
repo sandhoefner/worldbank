@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>World Bank DHS-CRU Vis</title>
+
+<style>
+</style>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="exploder.js"></script>
+
+<script>
+
+// http://bost.ocks.org/mike/map/
+
+var margin = {top: 50, bottom: 10, left: 300, right: 40};
+var width = 1250 - margin.left - margin.right;
+var height = 550 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+var projection = d3.geo.mercator()
+  .scale(0.1)
+
+var path = d3.geo.path()
+  .projection(projection);
+
+var exploder_lt = d3.geo.exploder()
+  .projection(projection)
+  .size(function(d, i) { return 400; })
+  .position(function(d, i) {
+    var px = Math.max(0, width - 9*60)/2
+    return [50 + px + (i%10)*60, 200 + Math.floor(i/10)*60];
+  });
+
+d3.json("shape_topo_tool_point1.json", function(data) {
+  var units = topojson.feature(data, data.objects.shape)
+  console.log(units,"f");
+  var lso = svg.append("path")
+    .datum(units)
+    .attr("d", path)
+    .attr("class", "path")
+    .attr("stroke", "black")
+    .attr("fill", "white");
+  lso
+    .call(exploder_lt);
+});
+
+</script>
+</body>
+</html>
