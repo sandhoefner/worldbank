@@ -90,7 +90,7 @@ function coeff() {
         return d3.format(',')(Math.round(d));
     }
     map
-        .colors(colorbrewer.Reds[3])
+        .colors(colorbrewer.Coeff[8])
         .column('dY/dT')
         .format(format);
     d3.select('#map')
@@ -118,7 +118,7 @@ function coeff_r() {
         return d3.format(',')(d);
     }
     map
-        .colors(colorbrewer.RdYlGn[9])
+        .colors(colorbrewer.Coeff[8])
         .column('dY/dR')
         .format(format);
     d3.select('#map')
