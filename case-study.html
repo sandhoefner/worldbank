@@ -126,8 +126,37 @@ var heat_color_gh = d3.scale.linear()
 
 // load data
 d3.csv("gh_lt_slim_CSV.csv", function(data) {
-  
+
+// http://wiki.openstreetmap.org/wiki/Mercator#ActionScript_and_JavaScript
 function lat2y(a) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+a*(Math.PI/180)/2)); }
+
+// http://wiki.openstreetmap.org/wiki/Mercator#JavaScript
+function deg_rad(ang) {
+    return ang * (Math.PI/180.0)
+}
+function merc_x(lon) {
+    var r_major = 6378137.000;
+    return r_major * deg_rad(lon);
+}
+function merc_y(lat) {
+    if (lat > 89.5)
+        lat = 89.5;
+    if (lat < -89.5)
+        lat = -89.5;
+    var r_major = 6378137.000;
+    var r_minor = 6356752.3142;
+    var temp = r_minor / r_major;
+    var es = 1.0 - (temp * temp);
+    var eccent = Math.sqrt(es);
+    var phi = deg_rad(lat);
+    var sinphi = Math.sin(phi);
+    var con = eccent * sinphi;
+    var com = .5 * eccent;
+    con = Math.pow((1.0-con)/(1.0+con), com);
+    var ts = Math.tan(.5 * (Math.PI*0.5 - phi))/con;
+    var y = 0 - r_major * Math.log(ts);
+    return y;
+}
 
   var heat_node = svg.selectAll(".heat_node")
     .data(data)
@@ -150,7 +179,10 @@ function lat2y(a) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+a*(Math.PI/
         // console.log(y_gh-mult_gh*d.latnum/(y_gh-lat2y(d.latnum)));
         // console.log(y_gh-mult_gh*d.latnum);
         // console.log(width);
-        return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*lat2y(d.latnum))+")";
+        var x = 300+merc_x(d.longnum)/1500;
+        var y = 900-merc_y(d.latnum)/1500;
+        console.log(x,y);
+        return "translate("+(x)+","+(y)+")";
         // return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
       } else {
         return "translate("+(x1_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
