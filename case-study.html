@@ -13,6 +13,7 @@
 Top: Ghana. Bottom: Lesotho.<br>Left: max temp (blue cold, red hot). Right: wealth (blue rich, red poor).<br>
 
 <script>
+// python -m SimpleHTTPServer
 // create svg canvas
 var margin = {top: 50, bottom: 10, left: 300, right: 40};
 var width = 1250 - margin.left - margin.right;
@@ -95,16 +96,6 @@ d3.json("GHA.json", function(data) {
   gha
     .call(exploder_gh);
 
-  var gha2 = svg.append("path")
-    .datum(units)
-    .attr("d", path)
-    .attr("stroke", "black")
-    .attr("fill", "white");
-
-  gha2
-    .call(exploder_gh2);
-});
-
 var mult_gh = 70;
 var y_gh = 850;
 var x1_gh = 300;
@@ -135,6 +126,8 @@ var heat_color_gh = d3.scale.linear()
 
 // load data
 d3.csv("gh_lt_slim_CSV.csv", function(data) {
+  
+function lat2y(a) { return 180/Math.PI * Math.log(Math.tan(Math.PI/4+a*(Math.PI/180)/2)); }
 
   var heat_node = svg.selectAll(".heat_node")
     .data(data)
@@ -142,7 +135,23 @@ d3.csv("gh_lt_slim_CSV.csv", function(data) {
     .append("g").attr("class", "heat_node")
     .attr("transform", function(d, i) {
       if (d.cc == "GH") {
-        return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
+        // http://stackoverflow.com/questions/14329691/
+        // covert-latitude-longitude-point-to-a-pixels-x-y-on-mercator-projection
+        // var x = (d.longnum+180)*(width/360);
+        // // if ((45 + d.latnum/2) == 90 || (45 + d.latnum/2) < 0 || (45 + d.latnum/2) > 260) {
+        // //   console.log("bad tan"); }
+        // if ((Math.tan(45 + d.latnum/2)) == 0) {console.log("bad log");}
+        // var mercN = Math.log(Math.tan(45 + d.latnum/2));
+        // if (isNaN(mercN)) {console.log((Math.tan(45 + d.latnum/2)));}
+        // var y     = (height/2)-(width*mercN/(2*Math.PI));
+        // if (isNaN(y) ){console.log("nan");}
+
+        
+        // console.log(y_gh-mult_gh*d.latnum/(y_gh-lat2y(d.latnum)));
+        // console.log(y_gh-mult_gh*d.latnum);
+        // console.log(width);
+        return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*lat2y(d.latnum))+")";
+        // return "translate("+(x1_gh+mult_gh*d.longnum)+","+(y_gh-mult_gh*d.latnum)+")"
       } else {
         return "translate("+(x1_lt+mult_lt*d.longnum)+","+(y_lt-mult_lt*d.latnum)+")"
       }
@@ -179,7 +188,7 @@ d3.csv("gh_lt_slim_CSV.csv", function(data) {
       // console.log(this);
       return wealth_color(d.wealth_nat)
     });
-});
+});});
 
 </script>
 </body>
